@@ -1,4 +1,6 @@
 from qiskit import *
+from qiskit import IBMQ
+
 # from qiskit.visualization import plot_histogram
 
 # used in Jupyter notebooks
@@ -24,6 +26,9 @@ def draw_circuit(circuit):
 
 
 def run_circuit(circuit):
+    # IBMQ.load_account()
+    # print(Aer.backends())
+
     emulator = Aer.get_backend('qasm_simulator')
     job = execute(circuit, emulator, shots=10, memory=True)
     result = job.result()
@@ -51,7 +56,6 @@ def explicit_circuit():
     print(circuit.draw())
 
     # print(Aer.backends())
-
     # emulator = Aer.get_backend('statevector_simulator')
     # job = execute(circuit, emulator)
     # ket = job.result().get_statevector()
