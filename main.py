@@ -25,12 +25,20 @@ def draw_circuit(circuit):
     print(circuit.draw())
 
 
-def run_circuit(circuit):
-    # IBMQ.load_account()
-    # print(Aer.backends())
+def get_device(real=False):
+    if real:
+        IBMQ.load_account()
+        provider = IBMQ.get_provider(hub='ibm-q')
+        # for backend in provider.backends():
+        #     print(backend.status())
+        return provider.get_backend('ibmq_london')
+    else:
+        return Aer.get_backend('qasm_simulator')
 
-    emulator = Aer.get_backend('qasm_simulator')
-    job = execute(circuit, emulator, shots=10, memory=True)
+
+def run_circuit(circuit, real_device=False):
+    device = get_device(real_device)
+    job = execute(circuit, device, shots=10, memory=True)
     result = job.result()
     counts = result.get_counts()
     print(counts)
@@ -56,14 +64,14 @@ def explicit_circuit():
     print(circuit.draw())
 
     # print(Aer.backends())
-    # emulator = Aer.get_backend('statevector_simulator')
-    # job = execute(circuit, emulator)
+    # device = Aer.get_backend('statevector_simulator')
+    # job = execute(circuit, device)
     # ket = job.result().get_statevector()
     # for amplitude in ket:
     #     print(amplitude)
 
-    emulator = Aer.get_backend('qasm_simulator')
-    job = execute(circuit, emulator, shots=10, memory=True)
+    device = Aer.get_backend('qasm_simulator')
+    job = execute(circuit, device, shots=10, memory=True)
     result = job.result()
     counts = result.get_counts()
     print(counts)
