@@ -1,7 +1,6 @@
 from qiskit import *
-from qiskit import IBMQ
-
 # from qiskit.visualization import plot_histogram
+from qiskit import IBMQ
 
 # used in Jupyter notebooks
 # %config InlineBackend.figure_format = 'svg'
