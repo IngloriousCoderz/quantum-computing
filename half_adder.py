@@ -23,9 +23,12 @@ def half_adder():
     return circuit.to_instruction()
 
 
+zero_ket = [1, 0]
+one_ket = [0, 1]
+
 circuit = QuantumCircuit(4, 2)
-circuit.x(0)
-circuit.x(1)
+circuit.initialize(one_ket, 0)  # same as circuit.x(0)
+circuit.initialize(one_ket, 1)  # same as circuit.x(1)
 circuit.append(half_adder(), [0, 1, 2, 3])
 circuit.measure(2, 0)
 circuit.measure(3, 1)
