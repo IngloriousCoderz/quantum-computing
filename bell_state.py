@@ -6,7 +6,7 @@ from qiskit import IBMQ
 # %config InlineBackend.figure_format = 'svg'
 
 
-def main():
+def bell_state():
     qc = create_circuit()
     draw_circuit(qc)
     run_circuit(qc)
@@ -15,6 +15,7 @@ def main():
 def create_circuit():
     circuit = QuantumCircuit(2)
     circuit.h(0)
+    circuit.x(1)
     circuit.cx(0, 1)
     circuit.measure_all()
     return circuit
@@ -45,7 +46,7 @@ def run_circuit(circuit, real_device=False):
     print(shots)
 
 
-main()
+bell_state()
 
 
 def explicit_circuit():

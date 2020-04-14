@@ -1,6 +1,15 @@
 from qiskit import QuantumCircuit, execute, Aer
 
 backend = Aer.get_backend('qasm_simulator')
+zero_ket = [1, 0]
+one_ket = [0, 1]
+
+
+def half_adder():
+    circuit = QuantumCircuit(4, name='half adder')
+    circuit.append(xor_gate(), [0, 1, 2])
+    circuit.append(and_gate(), [0, 1, 3])
+    return circuit.to_instruction()
 
 
 def xor_gate():
@@ -15,16 +24,6 @@ def and_gate():
     circuit.ccx(0, 1, 2)
     return circuit.to_instruction()
 
-
-def half_adder():
-    circuit = QuantumCircuit(4, name='half adder')
-    circuit.append(xor_gate(), [0, 1, 2])
-    circuit.append(and_gate(), [0, 1, 3])
-    return circuit.to_instruction()
-
-
-zero_ket = [1, 0]
-one_ket = [0, 1]
 
 circuit = QuantumCircuit(4, 2)
 circuit.initialize(one_ket, 0)  # same as circuit.x(0)
