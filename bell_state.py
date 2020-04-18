@@ -1,23 +1,25 @@
-from qiskit import *
+from qiskit import QuantumCircuit, execute, Aer, IBMQ
 # from qiskit.visualization import plot_histogram
-from qiskit import IBMQ
 
 # used in Jupyter notebooks
 # %config InlineBackend.figure_format = 'svg'
 
 
-def bell_state():
-    qc = create_circuit()
+def bell_state(type='qasm'):
+    qc = create_circuit(type)
     draw_circuit(qc)
-    run_circuit(qc)
+    run_circuit(qc, type)
 
 
-def create_circuit():
+def create_circuit(type='qasm'):
     circuit = QuantumCircuit(2)
     circuit.h(0)
-    circuit.x(1)
+    # circuit.x(1)
     circuit.cx(0, 1)
-    circuit.measure_all()
+
+    if type != 'unitary':
+        circuit.measure_all()
+
     return circuit
 
 
@@ -25,28 +27,36 @@ def draw_circuit(circuit):
     print(circuit.draw())
 
 
-def get_device(real=False):
-    if real:
+def get_backend(type='qasm'):
+    if type == 'quantum':
         IBMQ.load_account()
         provider = IBMQ.get_provider(hub='ibm-q')
         # for backend in provider.backends():
         #     print(backend.status())
         return provider.get_backend('ibmq_london')
+    elif type == 'unitary':
+        return Aer.get_backend('unitary_simulator')
     else:
         return Aer.get_backend('qasm_simulator')
 
 
-def run_circuit(circuit, real_device=False):
-    device = get_device(real_device)
-    job = execute(circuit, device, shots=10, memory=True)
+def run_circuit(circuit, type='qasm'):
+    backend = get_backend(type)
+    if type == 'unitary':
+        job = execute(circuit, backend)
+    else:
+        job = execute(circuit, backend, shots=10, memory=True)
+
     result = job.result()
-    counts = result.get_counts()
-    print(counts)
-    shots = result.get_memory()
-    print(shots)
+
+    if type == 'unitary':
+        print(result.get_unitary())
+    else:
+        print(result.get_counts())
+        print(result.get_memory())
 
 
-bell_state()
+bell_state(type='qasm')
 
 
 def explicit_circuit():
@@ -64,14 +74,14 @@ def explicit_circuit():
     print(circuit.draw())
 
     # print(Aer.backends())
-    # device = Aer.get_backend('statevector_simulator')
-    # job = execute(circuit, device)
+    # backend = Aer.get_backend('statevector_simulator')
+    # job = execute(circuit, backend)
     # ket = job.result().get_statevector()
     # for amplitude in ket:
     #     print(amplitude)
 
-    device = Aer.get_backend('qasm_simulator')
-    job = execute(circuit, device, shots=10, memory=True)
+    backend = Aer.get_backend('qasm_simulator')
+    job = execute(circuit, backend, shots=10, memory=True)
     result = job.result()
     counts = result.get_counts()
     print(counts)
